@@ -100,6 +100,6 @@ func main() {
 		}
 	})
 
-	log.Printf("Listening on port %d...", port)
+	// log.Printf("Listening on port %d...", port)
 	router.Run(fmt.Sprintf(":%d", port))
 }
