@@ -6,6 +6,8 @@ import (
 	"log"
 	"net/http"
 	"os"
+
+	_ "github.com/go-sql-driver/mysql"
 )
 
 func dbConn() (db *sql.DB) {
@@ -21,7 +23,17 @@ func dbConn() (db *sql.DB) {
 }
 
 func main() {
-	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+	port := 9090
+	// log.Println("Starting Go SQL Injection Demo application...")
+
+	//HealthCheck path
+	http.HandleFunc("/health", func(w http.ResponseWriter, r *http.Request) {
+		w.WriteHeader(http.StatusOK)
+		w.Write([]byte("OK"))
+	})
+
+	//Vulnerable path
+	http.HandleFunc("/data", func(w http.ResponseWriter, r *http.Request) {
 		db := dbConn()
 		defer db.Close()
 
@@ -51,5 +63,6 @@ func main() {
 		}
 	},
 	)
-	http.ListenAndServe(":9090", nil)
+	log.Printf("Listening on port %d...", port)
+	http.ListenAndServe(fmt.Sprintf(":%d", port), nil)
 }
