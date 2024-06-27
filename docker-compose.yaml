@@ -1,0 +1,33 @@
+version: '3.1'
+volumes:
+  data:
+services:
+  proxy:
+    image: docker.io/owasp/modsecurity-crs:4.3-nginx-202406090906
+    ports:
+      - "8080:8080"
+    environment:
+      - BACKEND=http://webapp:9090
+    depends_on:
+      - webapp
+  webapp:
+    image: quay.io/jesayafn/vuln-web:latest
+    ports:
+      - "9090:9090"
+    environment:
+      - MYSQL_USER=root
+      - MYSQL_PASSWORD=password
+      - MYSQL_DB=testdb
+      - MYSQL_HOST=db:3306
+  db:
+    image: docker.io/library/mysql:8.4.0
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: mydatabase
+      MYSQL_USER: user
+      MYSQL_PASSWORD: password
+    volumes:
+      - data:/var/lib/mysql
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - "3306:3306"
