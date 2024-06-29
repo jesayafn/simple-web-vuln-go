@@ -21,7 +21,7 @@
 #### Port
 
 - 8080, NGINX with Mod Security CRS
-- 9090, vulnerable application
+- 9090, Vulnerable application
 - 3306, MySQL database
 
 ### Steps
@@ -32,11 +32,11 @@ The code is already integrated into Quay.io to automatically build the image fro
 
 #### Deploy the application stack
 
-After installing required the dependencies on your machine, you can simply run the following command: `docker-compose up -d` to up and run the application. After the application is deployed, you can access the application with `http://[Machine-IP]:8080` for accessing the application through NGINX with Mod Security CRS and `http://[Machine-IP]:8080` for accessing the application without any reverse proxy.
+After installing required the dependencies on your machine, you can simply run the following command: `docker-compose up -d` to up and run the application. After the application is deployed, you can access the application with `http://[Machine-IP]:8080` for accessing the application through NGINX with Mod Security CRS and `http://[Machine-IP]:9090` for accessing the application without any reverse proxy.
 
-## Application
+## SQL Injection
 
-### Vulnerability and Mitigation of SQL Injection
+### Vulnerability and Mitigation of SQL Injection within the Application
 This application has two paths, `/vuln-path` and `/secured-path`. `/vuln-path` is written with SQL injection vulnerability and `/secured-path` is written with mitigated from SQL injection.
 
 ```go
