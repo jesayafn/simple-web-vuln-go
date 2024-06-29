@@ -75,9 +75,15 @@ func main() {
 
 		username := c.Query("username")
 
-		// Use parameterized query to avoid SQL injection
-		query := "SELECT * FROM users WHERE username = ?"
-		rows, err := db.Query(query, username)
+		// Use parameterized, and prepared query to avoid SQL injection
+		stmt, err := db.Prepare("SELECT * FROM users WHERE username = ?")
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+			return
+		}
+		defer stmt.Close()
+
+		rows, err := stmt.Query(username)
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 			return
