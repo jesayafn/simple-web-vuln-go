@@ -1,6 +1,6 @@
 # Vulnerable application with Golang
 
-This is a simple application that has vulnerability injected by malicious SQL queries. Written with Golang, utilize containerization technology, and use docker compose to easily deploy this application with declarative way.
+This is a simple application that has vulnerability that can be exploited by malicious SQL queries. Written with Golang, utilize containerization technology, and use docker compose to easily deploy this application with declarative way.
 
 ## Technology stack
 - NGINX with Mod Security CRS
@@ -20,7 +20,7 @@ This is a simple application that has vulnerability injected by malicious SQL qu
 - Docker Engine
 - Docker Compose
 
-#### Port
+#### Ports
 
 - 8080, NGINX with Mod Security CRS
 - 9090, Vulnerable application
