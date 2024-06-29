@@ -1,5 +1,7 @@
 # Vulnerable application with Golang
 
+This is a simple application that has vulnerability injected by malicious SQL queries. Written with Golang, utilize containerization technology, and use docker compose to easily deploy this application with declarative way.
+
 ## Technology stack
 - NGINX with Mod Security CRS
 - Vulnerable Application
@@ -24,11 +26,15 @@
 - 9090, Vulnerable application
 - 3306, MySQL database
 
+#### Others
+
+- Internet access for pulling image from the registry
+
 ### Steps
 
 #### Build image
 
-The code is already integrated into Quay.io to automatically build the image from the source code in GitHub. See the Quay.io registry of this repository at [this link](https://quay.io/repository/jesayafn/vuln-web). If you want to build with your hand, you can build with the command: `docker builds -f Containerfile -t web-vuln:1 .` Do not forget to change the image tag on `docker-compose.yaml` to `web-vuln:1` for the `webapp` service.
+The code is already integrated into Quay.io to automatically build the image from the source code in GitHub. See the Quay.io registry of this repository at [this link](https://quay.io/repository/jesayafn/vuln-web). If you want to build with your hand, you can build with the command: `docker builds -f Containerfile -t web-vuln:1 .` Do not forget to change the image tag on `docker-compose.yaml` to `web-vuln:1` for the `webapp` service before deploying the application.
 
 #### Deploy the application stack
 
@@ -112,7 +118,7 @@ router.GET("/secured-path", func(c *gin.Context) {
 	})
 ```
 
-In the code snippet above, the query statement has been pre-compiled and parameterized by default of the prepared statements feature. It means the path `/secured-path` has been mitigated by treating any input from the `username` variable that has a value from the `username` parameter as a parameter for query and prepared the statement for query, not directly concatenated into an SQL query the value of `username` variable. To prove this vulnerability, you can access the application with `http://[Machine-IP]:9090/secured-path?username=alice%27%20OR%20%271%27=%271` that inject `' OR '1'='1` on `username` parameter within `/vuln-path` and you will get `200 OK` results with empty response body.
+In the code snippet above, the query statement has been pre-compiled and parameterized by default of the prepared statements feature. It means the path `/secured-path` has been mitigated by treating any input from the `username` variable that has a value from the `username` parameter as a parameter for query and prepared the statement for query, not directly concatenated into an SQL query the value of `username` variable. To prove this vulnerability, you can access the application with `http://[Machine-IP]:9090/secured-path?username=alice%27%20OR%20%271%27=%271` that inject `' OR '1'='1` on `username` parameter within `/secured-path` and you will get `200 OK` results with empty response body.
 
 ### Protection with Mod Security CRS
 
