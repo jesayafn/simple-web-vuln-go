@@ -40,9 +40,8 @@ The code is already integrated into Quay.io to automatically build the image fro
 
 After installing required the dependencies on your machine, you can simply run the following command: `docker-compose up -d` to up and run the application. After the application is deployed, you can access the application with `http://[Machine-IP]:8080` for accessing the application through NGINX with Mod Security CRS and `http://[Machine-IP]:9090` for accessing the application without any reverse proxy.
 
-## SQL Injection
 
-### Vulnerability and Mitigation of SQL Injection within the Application
+## Vulnerability and Mitigation of SQL Injection within the Application
 This application has two paths, `/vuln-path` and `/secured-path`. `/vuln-path` is written with SQL injection vulnerability and `/secured-path` is written with mitigated from SQL injection.
 
 ```go
@@ -120,6 +119,6 @@ router.GET("/secured-path", func(c *gin.Context) {
 
 In the code snippet above, the query statement has been pre-compiled and parameterized by default of the prepared statements feature. It means the path `/secured-path` has been mitigated by treating any input from the `username` variable that has a value from the `username` parameter as a parameter for query and prepared the statement for query, not directly concatenated into an SQL query the value of `username` variable. To prove this vulnerability, you can access the application with `http://[Machine-IP]:9090/secured-path?username=alice%27%20OR%20%271%27=%271` that inject `' OR '1'='1` on `username` parameter within `/secured-path` and you will get `200 OK` results with empty response body.
 
-### Protection with Mod Security CRS
+## Protection with Mod Security CRS
 
 On this deployment of docker compose, I add NGINX with Mod Security CRS to protect the application against any form of security attack including SQL injection. To prove this protection, you can access the application with `http://[Machine-IP]:8080/vuln-path?username=alice%27%20OR%20%271%27=%271` that inject `' OR '1'='1` on `username` parameter within `/vuln-path` and you will get `403 Forbidden` results on browser or cURL. This add protection for the application if the application accidentally creates a mistake in writing code with SQL injection vulnerability.
